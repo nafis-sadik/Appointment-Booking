@@ -1,0 +1,25 @@
+@use 'ngx-toastr/toastr' as *;
+
+:root {
+  --primary-bg-color: #6675df;
+  --primary-border-color: #8693f1;
+  --primary-txt-color: white;
+  --button-radius: 10px;
+}
+
+body{
+    font-family: Lato, Arial, Helvetica, Verdana;
+    color: #888;
+    margin: 0;
+}
+
+.btn-primary {
+  color: var(--primary-txt-color) !important;
+  background-color: var(--primary-bg-color) !important;
+  border-color: var(--primary-border-color);
+}
+
+.btn-primary:hover {
+  color: white !important;
+  background-color: black !important;
+}

@@ -1,0 +1,106 @@
+###########################
+# General Ignore Patterns #
+###########################
+.DS_Store
+*.user
+*.userprefs
+*.log
+*.bak
+*.tmp
+*.pid
+.env
+.env.local
+*.swp
+*.swo
+
+#######################
+# IDE Specific #
+#######################
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.iml
+
+#######################
+# Frontend Specific #
+#######################
+**/node_modules/
+**/dist/
+**/.angular/
+**/.cache/
+**/coverage/
+**/browserslist
+**/.eslintcache
+**/*.log
+
+#######################
+# .NET Specific #
+#######################
+## Build results
+*/bin/*
+*/obj/*
+**/publish/*
+**/Debug/*
+**/Release/*
+**/debug/*
+**/release/*
+**/packages/*
+**/artifacts/*
+
+src/Backend/Application/Data/obj/
+src/Backend/Application/Services/obj/
+src/Backend/Application/WebAPI/obj/
+src/Backend/BlueprintX.Core/obj/
+src/Backend/RabbitMQ/obj/
+
+
+src/Backend/Application/Data/bin/
+src/Backend/Application/Services/bin/
+src/Backend/Application/WebAPI/bin/
+src/Backend/BlueprintX.Core/bin/
+src/Backend/RabbitMQ/bin/
+
+#######################
+# Compiled .NET Files #
+#######################
+*.dll
+*.pdb
+*.exe
+*.cache
+*.config
+*.manifest
+*.xml
+
+## Visual Studio cache
+**/.vs/
+**/.vscode/
+**/.msbuild/
+**/.ionide/
+
+## Project files
+**/*.csproj.user
+**/appsettings.Development.json
+
+## Test results
+**/TestResults/
+
+## NuGet
+**/[Pp]ackages/
+.nuget/
+**/.nuget/
+**/nuget.exe
+
+## Rider
+**/.idea/
+**/*.sln.iml
+
+#######################
+# Docker Specific #
+#######################
+docker-compose.override.yml
+**/docker-compose*.yml
+**/Dockerfile*
+**/.dockerignore
+
+**/github-personal-access-token.txt

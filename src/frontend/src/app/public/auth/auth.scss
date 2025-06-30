@@ -1,0 +1,21 @@
+.auth-structure {
+    background-image: url('/images/NicholasSwanson.jpg');
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.form-pane {
+    width: 40vw;
+    height: 100vh;
+    background-color: white;
+    opacity: 0.8;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
