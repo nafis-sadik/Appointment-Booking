@@ -54,18 +54,6 @@ flowchart  LR;
 	PQ  -->  PG["Payment Gateway"]  &  PM["SMTP"]  &  PT["Twillo"]
 ```
 
-
-
-```mermaid
-graph TD;
-    BlueprintX -- Foundation --> Data;
-    Data -- View Model + Entity --> Services;
-    Data -- View Model + Entity --> RC{RabbitConsumer};
-    Services -- Business Logic --> WebAPI;
-    WebAPI -- Rest API --> Angular;
-    RC --> RabbitMQ;
-    Services -- RabbitMQProducer --> RC;
-```
 ## Test Data
 
 Login
