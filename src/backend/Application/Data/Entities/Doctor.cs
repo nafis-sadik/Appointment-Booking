@@ -36,7 +36,7 @@ namespace Data.Entities
         public DateTime? UpdateDate { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
-        public virtual Clinic Clinic { get; set; } = new Clinic();
+        public virtual Clinic Clinic { get; set; }
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Emit;
 
 namespace Data.Entities
 {
@@ -29,6 +28,6 @@ namespace Data.Entities
         public TimeSpan VisitTimeSapn { get; set; }
 
         // Navigation property
-        public virtual Doctor Doctor { get; set; } = new Doctor();
+        public virtual Doctor Doctor { get; set; }
     }
 }

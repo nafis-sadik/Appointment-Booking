@@ -61,6 +61,7 @@ namespace Services.Implementation
                     .Select(doctor => new DoctorViewModel
                     {
                         DoctorId = doctor.Id,
+                        Name = doctor.Name,
                     })
                     .ToListAsync();
                 return doctors;

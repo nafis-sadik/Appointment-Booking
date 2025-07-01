@@ -59,10 +59,11 @@ namespace RedBook.Core.IoC
 
             // Unit Of Work
             services.AddScoped<IRepositoryFactory, EFRepositoryFactory>();
-            services.AddScoped<IUnitOfWorkManager, EFUnitOfWorkManager>();
+            services.AddTransient<IUnitOfWorkManager, EFUnitOfWorkManager>();
 
             // Claims
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IClaimsPrincipalAccessor, HttpContextClaimsPrincipalAccessor>();
 
             // Object pooling

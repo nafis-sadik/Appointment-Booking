@@ -11,10 +11,8 @@ namespace WebAPI.Controllers
         private readonly IPatientService _patientService = patientService;
 
         [HttpPost]
-        public Task<IActionResult> Add(PatientViewModel model)
-        {
-            throw new ArgumentException();
-        }
+        public async Task<IActionResult> Add(PatientViewModel model)
+            => Ok(await _patientService.Add(model));
 
         [HttpPut]
         public Task<IActionResult> Update(PatientViewModel model)
@@ -30,9 +28,10 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("Appointment")]
-        public Task<IActionResult> Book(AppointmentViewModel model)
+        public async Task<IActionResult> Book(AppointmentViewModel model)
         {
-            throw new ArgumentException();
+            await _patientService.Book(model);
+            return Ok();
         }
     }
 }

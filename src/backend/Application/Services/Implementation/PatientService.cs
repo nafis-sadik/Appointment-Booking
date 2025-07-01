@@ -3,6 +3,7 @@ using Data.Entities;
 using Data.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RedBook.Core.AutoMapper;
@@ -12,21 +13,27 @@ using RedBook.Core.Security;
 using RedBook.Core.UnitOfWork;
 using Services.Abstraction;
 using System.Text;
-using RabbitMQ.Client;
-using System.Text;
+using System.Text.Json;
 
 namespace Services.Implementation
 {
     public class PatientService : ServiceBase, IPatientService
     {
+        private readonly IConnectionFactory _connectionFactory;
+        private readonly IConfiguration _configuration;
         public PatientService(
             ILogger<PatientService> logger,
             IObjectMapper mapper,
             IClaimsPrincipalAccessor claimsPrincipalAccessor,
             IUnitOfWorkManager unitOfWork,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IConnectionFactory connectionFactory,
+            IConfiguration configuration
         ) : base(logger, mapper, claimsPrincipalAccessor, unitOfWork, httpContextAccessor)
-        { }
+        {
+            _connectionFactory = connectionFactory;
+            _configuration = configuration;
+        }
 
         public async Task<PatientViewModel> Add(PatientViewModel model)
         {
@@ -38,6 +45,7 @@ namespace Services.Implementation
                     .Where(u => u.UserId == User.UserId)
                     .Select(u => u.Role)
                     .FirstOrDefault();
+
                 if (string.IsNullOrEmpty(userRole))
                     throw new ArgumentException(CommonConstants.HttpResponseMessages.InvalidToken);
 
@@ -48,38 +56,41 @@ namespace Services.Implementation
 
                 // Insert the patient
                 var patientRepository = repositoryFactory.GetRepository<Patient>();
-                Patient entity = Mapper.Map<Patient>(model);
+                Patient entity = new Patient();
+                entity.Name = model.Name;
+                entity.ContactInformation = entity.ContactInformation;
                 entity.CreateBy = User.UserId;
                 entity.CreateDate = DateTime.UtcNow;
                 entity = await patientRepository.InsertAsync(entity);
                 await patientRepository.SaveChangesAsync();
-                model = Mapper.Map<PatientViewModel>(entity);
+                model.Id = entity.Id;
                 return model;
             }
         }
 
-        public Task<AppointmentViewModel> Book(AppointmentViewModel model)
+        public async Task Book(AppointmentViewModel model)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using var connection = factory.CreateConnection();
-            using var channel = connection.CreateModel();
+            using var connection = await _connectionFactory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
 
-            channel.QueueDeclare(queue: "hello",
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+            // Declare the same queue (ensures it exists)
+            await channel.QueueDeclareAsync(
+                queue: "booking-queue",
+                durable: true,
+                exclusive: false,
+                autoDelete: false);
 
-            string message = "Hello, RabbitMQ!";
-            var body = Encoding.UTF8.GetBytes(message);
+            // Serialize message to JSON
+            string messageJson = JsonSerializer.Serialize(model);
+            byte[] messageBody = Encoding.UTF8.GetBytes(messageJson);
 
-            channel.BasicPublish(exchange: "",
-                                 routingKey: "hello",
-                                 basicProperties: null,
-                                 body: body);
+            // Send the message
+            await channel.BasicPublishAsync(
+                exchange: string.Empty,    // Use default exchange
+                routingKey: _configuration["RabbitMQ:AppointmentQueue"] ?? "appointment-queue",
+                body: messageBody);
 
-            Console.WriteLine(" [x] Sent '{0}'", message);
-
+            _logger.LogInformation("Sent booking message for BookingId: {BookingId}", model.AppointmentId);
         }
 
         public async Task<IEnumerable<PatientViewModel>> Search(string SearchString)

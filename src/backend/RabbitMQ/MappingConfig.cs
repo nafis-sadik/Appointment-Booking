@@ -8,10 +8,6 @@ namespace Services
     {
         public MappingConfig()
         {
-            CreateMap<PatientViewModel, Patient>()
-                .ForMember(dest => dest.Id, src => src.MapFrom(opt => opt.Id))
-                .ReverseMap();
-
             CreateMap<ClinicViewModel, Clinic>()
                 .ForMember(dest => dest.CreateBy, src => src.Ignore())
                 .ForMember(dest => dest.CreateDate, src => src.Ignore())
@@ -34,10 +30,6 @@ namespace Services
                 .ForMember(dest => dest.UpdateBy, src => src.Ignore())
                 .ForMember(dest => dest.UpdateDate, src => src.Ignore())
                 .ForMember(dest => dest.Id, src => src.MapFrom(opt => opt.AppointmentId))
-                .ReverseMap();
-
-            CreateMap<ScheduleViewModel, Schedule>()
-                .ForMember(dest => dest.Id, src => src.MapFrom(opt => opt.ScheduleId))
                 .ReverseMap();
         }
     }

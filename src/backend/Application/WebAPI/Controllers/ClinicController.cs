@@ -25,8 +25,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Update(ClinicViewModel model)
             => Ok(await _clinicService.Update(model));
 
-        [HttpPut]
-        [Route("Clinic")]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> Add(ClinicViewModel model)
             => Ok(await _clinicService.Add(model));

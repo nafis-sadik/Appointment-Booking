@@ -47,8 +47,8 @@ namespace Data.Entities
         public DateTime UpdateDate { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
-        public virtual Patient Patient { get; set; } = null!;
-        public virtual Doctor Doctor { get; set; } = null!;
-        public virtual Clinic Clinic { get; set; } = null!;
+        public virtual Patient Patient { get; set; }
+        public virtual Doctor Doctor { get; set; }
+        public virtual Clinic Clinic { get; set; }
     }
 }

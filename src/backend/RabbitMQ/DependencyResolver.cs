@@ -1,11 +1,10 @@
 ﻿using Data.Entities;
 using RabbitMQ.Client;
+using RedBook.Core.AutoMapper;
 using RedBook.Core.IoC;
 using RedBook.Core.Security;
-using Services.Abstraction;
-using Services.Implementation;
 
-namespace WebAPI.Configurations
+namespace Rabbit.Configurations
 {
     public static class DependencyResolver
     {
@@ -17,13 +16,10 @@ namespace WebAPI.Configurations
             // Security context mapping
             services.AddScoped<IClaimsPrincipalAccessor, HttpContextClaimsPrincipalAccessor>();
 
-            // Services
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IClinicService, ClinicService>();
-            services.AddScoped<IDoctorService, DoctorService>();
-            services.AddScoped<IPatientService, PatientService>();
+            // Security context mapping
+            services.AddObjectMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            // Register RabbitMQ connection factory for the Web API
+            // Register RabbitMQ connection factory
             services.AddSingleton<IConnectionFactory>(provider =>
             {
                 return new ConnectionFactory()

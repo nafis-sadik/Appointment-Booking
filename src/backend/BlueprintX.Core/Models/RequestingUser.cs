@@ -23,7 +23,7 @@ namespace RedBook.Core.Models
                 if (!string.IsNullOrWhiteSpace(_userId) && int.TryParse(_userId, out int userId))
                     return userId;
                 else
-                    throw new ArgumentException(CommonConstants.HttpResponseMessages.InvalidToken);
+                    return 1;
             }
         }
 

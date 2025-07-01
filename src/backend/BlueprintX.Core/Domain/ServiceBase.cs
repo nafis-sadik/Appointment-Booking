@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RedBook.Core.AutoMapper;
 using RedBook.Core.Models;
@@ -42,8 +43,21 @@ namespace RedBook.Core.Domain
         private RequestingUser _userInfo;
         public RequestingUser User { get { return _userInfo; } }
 
-        public ServiceBase(ILogger<ServiceBase> logger, IObjectMapper mapper, IClaimsPrincipalAccessor accessor, IUnitOfWorkManager unitOfWork, IHttpContextAccessor httpContextAccessor)
+        public ServiceBase(ILogger<ServiceBase> logger, IObjectMapper mapper, IServiceProvider serviceProvider)
         {
+            _logger = logger;
+            _mapper = mapper;
+            using var scope = serviceProvider.CreateScope();
+            _unitOfWorkManager = scope.ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
+        }
+
+        public ServiceBase(
+            ILogger<ServiceBase> logger, 
+            IObjectMapper mapper, 
+            IClaimsPrincipalAccessor accessor, 
+            IUnitOfWorkManager unitOfWork, 
+            IHttpContextAccessor httpContextAccessor
+        ) {
             _logger = logger;
             _mapper = mapper;
             _unitOfWorkManager = unitOfWork;

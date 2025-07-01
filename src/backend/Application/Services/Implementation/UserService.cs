@@ -91,10 +91,10 @@ namespace Services.Implementation
                 (
                     issuer: "BlueprintX",
                     audience: "User",
-                    expires: DateTime.UtcNow.AddDays(CommonConstants.SecurityConfig.JWTExpire),
+                    expires: DateTime.UtcNow.AddDays(JWTExpire),
                     signingCredentials: new SigningCredentials(
-                        new SymmetricSecurityKey(CommonConstants.SecurityConfig.JWTSecret),
-                        SecurityAlgorithms.HmacSha256Signature
+                        new SymmetricSecurityKey(JWTSecret),
+                        SecurityAlgorithms.HmacSha256
                     ),
                     claims: claimList
                 );

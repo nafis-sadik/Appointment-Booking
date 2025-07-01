@@ -1,6 +1,4 @@
-# Welcome to StackEdit!
-
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
+# Mini Appointment Booking System
 
 
 # Initialization
@@ -19,8 +17,44 @@ Run docker container
 Docker will be running the **Web Portal** in ***http://localhost:15672/***
 User name : guest
 Password : guest
+TCP Port : 5672
 
 ## System Architecture
+
+```mermaid
+graph TD;
+    BlueprintX --> DB(Database);    
+    Angular -- Rest API --> WebAPI;
+    WebAPI -- Business Logic --> S{Services};
+    S -- View Model + Entity --> Data;
+    Data --> BlueprintX;
+    S --> P(RabbitMQ Producer)
+    P --> RabbitMQ;
+    RC(Rabbit Consumer) --> DB;
+    RabbitMQ --> RC;
+```
+
+
+## System Architecture Proposal
+
+```mermaid
+flowchart  LR;
+	A["Admin"]  -- HTTP -->  C["Create/Update API"]  &  G["Get API"]  &  P["Payment Gateway API"]
+	C  -->  DS["Dedicated Scheduler<br>For<br>Notification Management"]
+	DS  -->  NQ["Notification Que"]
+	NQ  -->  SMTP
+	NQ  -->  Twillo
+	C  -->  Q[("Messaging Que")]
+	Q  -- Creates/Updates -->  DB[("Database")]
+	Q  -- Updates -->  CS[("Redis")]
+	G  -- Check -->  CS
+	G  -- If No Cache -->  DB
+	G  -- Update -->  CS
+	P  -->  PQ[("Payment Que")]
+	PQ  -->  PG["Payment Gateway"]  &  PM["SMTP"]  &  PT["Twillo"]
+```
+
+
 
 ```mermaid
 graph TD;
@@ -32,61 +66,46 @@ graph TD;
     RC --> RabbitMQ;
     Services -- RabbitMQProducer --> RC;
 ```
+## Test Data
 
+Login
+{
+  "email": "nafis.sadik13@yahoo.com",
+  "password": "a8i#YJVFzk9N"
+}
 
-# Markdown extensions
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxIiwiVXNlck5hbWUiOiJuYWZpc19zYWRpayIsImV4cCI6MTc1MTQwODg5OSwiaXNzIjoiQmx1ZXByaW50WCIsImF1ZCI6IlVzZXIifQ.I8oEtc6EgNW4w1IMor_-MRgMc5Lym0BUlK1FZjBRskc
 
-StackEdit extends the standard Markdown syntax by adding extra **Markdown extensions**, providing you with some nice features.
+clinic - post
+{
+  "clinicId": 0,
+  "name": "Popular Diagnostics - Uttara",
+  "address": "Jashina Road, Uttara, Dhaka",
+  "contactNumber": "0123456789",
+  "operatingHours": "09:00:00",
+  "closingHours": "15:16:17"
+}
 
-> **ProTip:** You can disable any **Markdown extension** in the **File properties** dialog.
+doctor - post
+{
+  "doctorId": 0,
+  "clinicId": 1,
+  "name": "Dr. John",
+  "specialization": "Sergon",
+  "contactInformation": "1234"
+}
 
+{
+  "scheduleId": 0,
+  "doctorId": 4,
+  "dayOfWeek": "SUN",
+  "startTime": "07:00:00",
+  "endTime": "15:00:00",
+  "visitTimeSapn": "00:30:00"
+}
 
-## SmartyPants
-
-SmartyPants converts ASCII punctuation characters into "smart" typographic punctuation HTML entities. For example:
-
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
-
-
-## KaTeX
-
-You can render LaTeX mathematical expressions using [KaTeX](https://khan.github.io/KaTeX/):
-
-The *Gamma function* satisfying $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$ is via the Euler integral
-
-$$
-\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.
-$$
-
-> You can find more information about **LaTeX** mathematical expressions [here](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
-
-
-## UML diagrams
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
+{
+  "id": 0,
+  "name": "Mr. Smith",
+  "contactInformation": "12132344"
+}

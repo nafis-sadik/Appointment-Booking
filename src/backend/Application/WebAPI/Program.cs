@@ -1,11 +1,12 @@
-using WebAPI.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using RedBook.Core.Constants;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RedBook.Core.Constants;
 using System.Reflection;
+using System.Text;
+using WebAPI.Configurations;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Inventory.WebAPI
@@ -55,7 +56,7 @@ namespace Inventory.WebAPI
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(CommonConstants.SecurityConfig.SaltByte),
+                    IssuerSigningKey = new SymmetricSecurityKey(CommonConstants.SecurityConfig.JWTSecret),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
